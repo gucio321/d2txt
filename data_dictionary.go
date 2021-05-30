@@ -42,6 +42,22 @@ func Load(buf []byte) (*DataDictionary, error) {
 	return data, nil
 }
 
+func (d *DataDictionary) Encode() ([]byte, error) {
+	var result bytes.Buffer
+
+	c := csv.NewWriter(&result)
+
+	c.Comma = '\t'
+
+	c.WriteAll(d.records)
+
+	if err := c.Error(); err != nil {
+		return nil, err
+	}
+
+	return result.Bytes(), nil
+}
+
 // Next reads the next row, skips Expansion lines or
 // returns false when the end of a file is reached or an error occurred
 func (d *DataDictionary) Next() (isntLast bool) {

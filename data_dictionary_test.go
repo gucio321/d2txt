@@ -38,6 +38,25 @@ func Test_Load(t *testing.T) {
 	assert.Equal(t, lookup, dict.lookup, "unexpected lookup table")
 }
 
+func Test_Encode(t *testing.T) {
+	data, err := ioutil.ReadFile("./testdata/testdata.txt")
+	if err != nil {
+		t.Error(err)
+	}
+
+	dict, err := Load(data)
+	if err != nil {
+		t.Error(fmt.Errorf("error loading data dictionary: %w", err))
+	}
+
+	newData, err := dict.Encode()
+	if err != nil {
+		t.Error(fmt.Errorf("error loading data dictionary: %w", err))
+	}
+
+	assert.Equal(t, data, newData, "unexpected dictionary encoded")
+}
+
 func Test_String(t *testing.T) {
 	dict, err := testdata()
 	if err != nil {
