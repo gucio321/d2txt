@@ -11,7 +11,7 @@ import (
 func testdata() (*DataDictionary, error) {
 	data, err := ioutil.ReadFile("./testdata/testdata.txt")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error reading testdata file: %w", err)
 	}
 
 	return Load(data)
