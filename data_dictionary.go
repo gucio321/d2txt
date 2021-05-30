@@ -17,8 +17,8 @@ type DataDictionary struct {
 	Err    error
 }
 
-// LoadDataDictionary loads the contents of a spreadsheet style txt file
-func LoadDataDictionary(buf []byte) *DataDictionary {
+// Load loads the contents of a spreadsheet style txt file
+func Load(buf []byte) *DataDictionary {
 	cr := csv.NewReader(bytes.NewReader(buf))
 	cr.Comma = '\t'
 	cr.ReuseRecord = true
