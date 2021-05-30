@@ -89,3 +89,8 @@ func (d *DataDictionary) Bool(field string) bool {
 
 	return n == 1
 }
+
+// Reset sets position to 0
+func (d *DataDictionary) Reset() {
+	d.position = 0
+}
