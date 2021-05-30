@@ -3,6 +3,7 @@ package d2txt
 import (
 	"bytes"
 	"encoding/csv"
+	"errors"
 	"io"
 	"log"
 	"strconv"
@@ -46,7 +47,7 @@ func (d *DataDictionary) Next() bool {
 	var err error
 	d.record, err = d.r.Read()
 
-	if err == io.EOF {
+	if errors.Is(err, io.EOF) {
 		return false
 	} else if err != nil {
 		d.Err = err
