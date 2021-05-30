@@ -1,6 +1,7 @@
 package d2txt
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -13,7 +14,7 @@ func testdata() (*DataDictionary, error) {
 		return nil, err
 	}
 
-	return Load(data), nil
+	return Load(data)
 }
 
 func Test_Load(t *testing.T) {
@@ -22,7 +23,10 @@ func Test_Load(t *testing.T) {
 		t.Error(err)
 	}
 
-	dict := Load(data)
+	dict, err := Load(data)
+	if err != nil {
+		t.Error(fmt.Errorf("error loading data dictionary: %w", err))
+	}
 
 	lookup := map[string]int{
 		"Name":     0,
@@ -32,23 +36,6 @@ func Test_Load(t *testing.T) {
 	}
 
 	assert.Equal(t, lookup, dict.lookup, "unexpected lookup table")
-}
-
-func Test_Next(t *testing.T) {
-	dict, err := testdata()
-	if err != nil {
-		t.Error(err)
-	}
-
-	for i := 0; dict.Next(); i++ {
-		if dict.record == nil {
-			t.Fatalf("record %d is nil, but shouldn't", i)
-		}
-	}
-
-	if dict.Err != nil {
-		t.Fatal(dict.Err)
-	}
 }
 
 func Test_String(t *testing.T) {
@@ -68,10 +55,6 @@ func Test_String(t *testing.T) {
 	if i != len(names) {
 		t.Fatal("unexpected number of records read")
 	}
-
-	if dict.Err != nil {
-		t.Fatalf("Unexpected error while reading dictionary: %s", dict.Err)
-	}
 }
 
 func Test_Number(t *testing.T) {
@@ -90,10 +73,6 @@ func Test_Number(t *testing.T) {
 
 	if i != len(ages) {
 		t.Fatal("unexpected number of records read")
-	}
-
-	if dict.Err != nil {
-		t.Fatalf("Unexpected error while reading dictionary: %s", dict.Err)
 	}
 }
 
@@ -118,10 +97,6 @@ func Test_List(t *testing.T) {
 	if i != len(hobbies) {
 		t.Fatal("unexpected number of records read")
 	}
-
-	if dict.Err != nil {
-		t.Fatalf("Unexpected error while reading dictionary: %s", dict.Err)
-	}
 }
 
 func Test_Bool(t *testing.T) {
@@ -140,9 +115,5 @@ func Test_Bool(t *testing.T) {
 
 	if i != len(employee) {
 		t.Fatal("unexpected number of records read")
-	}
-
-	if dict.Err != nil {
-		t.Fatalf("Unexpected error while reading dictionary: %s", dict.Err)
 	}
 }
