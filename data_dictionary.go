@@ -13,7 +13,7 @@ import (
 type DataDictionary struct {
 	lookup   map[string]int
 	position int
-	records  [][]string
+	Records  [][]string
 }
 
 // Load loads the contents of a spreadsheet style txt file
@@ -31,7 +31,7 @@ func Load(buf []byte) (*DataDictionary, error) {
 
 	data := &DataDictionary{
 		lookup:   make(map[string]int, len(fieldNames)),
-		records:  lines[0:],
+		Records:  lines[0:],
 		position: 0,
 	}
 
@@ -49,7 +49,7 @@ func (d *DataDictionary) Encode() ([]byte, error) {
 
 	c.Comma = '\t'
 
-	c.WriteAll(d.records)
+	c.WriteAll(d.Records)
 
 	if err := c.Error(); err != nil {
 		return nil, err
@@ -63,12 +63,12 @@ func (d *DataDictionary) Encode() ([]byte, error) {
 func (d *DataDictionary) Next() (isntLast bool) {
 	d.position++
 
-	if d.position == len(d.records) {
+	if d.position == len(d.Records) {
 		d.position = 0
 		return false
 	}
 
-	if d.records[d.position][0] == "Expansion" {
+	if d.Records[d.position][0] == "Expansion" {
 		return d.Next()
 	}
 
@@ -77,7 +77,7 @@ func (d *DataDictionary) Next() (isntLast bool) {
 
 // String gets a string from the given column
 func (d *DataDictionary) String(field string) string {
-	return d.records[d.position][d.lookup[field]]
+	return d.Records[d.position][d.lookup[field]]
 }
 
 // Number gets a number for the given column
