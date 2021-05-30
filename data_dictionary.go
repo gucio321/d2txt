@@ -42,6 +42,7 @@ func Load(buf []byte) (*DataDictionary, error) {
 	return data, nil
 }
 
+// Encode encodes data dictionary into a byte slice
 func (d *DataDictionary) Encode() ([]byte, error) {
 	var result bytes.Buffer
 
@@ -49,10 +50,13 @@ func (d *DataDictionary) Encode() ([]byte, error) {
 
 	c.Comma = '\t'
 
-	c.WriteAll(d.Records)
+	err := c.WriteAll(d.Records)
+	if err != nil {
+		return nil, fmt.Errorf("error occurred while writing data: %w", err)
+	}
 
 	if err := c.Error(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error occurred while writing data: %w", err)
 	}
 
 	return result.Bytes(), nil
